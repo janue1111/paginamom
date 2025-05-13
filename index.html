@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Escuela Bíblica Kids - Réplica con DataLayer y Pop-up</title>
+    <title>TOLDOSprueba - Alquiler y Venta de Sillas para Eventos</title>
     <script>
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
-            'event': 'pageView', // Cambiado de 'page_view' a 'pageView'
-            'pageLocation': window.location.href, // Añadido/cambiado a la URL completa
-            'pagePath': window.location.pathname, // Mantengo pagePath si lo prefieres, o lo podrías quitar si solo usas pageLocation
+            'event': 'pageView',
+            'pageLocation': window.location.href,
+            'pagePath': window.location.pathname,
             'pageTitle': document.title,
-            'referrer': document.referrer // Añadido el referrer
+            'referrer': document.referrer
         });
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Fuente principal para consistencia */
         }
         /* Estilos para el pop-up */
         .modal-overlay {
@@ -27,21 +27,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.7); /* Negro con opacidad para el fondo del modal */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            z-index: 1000;
         }
         .modal-content {
-            background-color: #fff;
+            background-color: #fff; /* Blanco para el contenido del modal */
             padding: 2rem;
             border-radius: 0.5rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
             position: relative;
-            max-width: 90%; /* Ajuste para pantallas pequeñas */
-            max-height: 90%; /* Ajuste para pantallas pequeñas */
-            overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
         }
         .modal-close-button {
             position: absolute;
@@ -49,7 +49,10 @@
             right: 1rem;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #aaa;
+            color: #9ca3af; /* Gris para el botón de cerrar */
+        }
+        .modal-close-button:hover {
+            color: #1f2937; /* Gris oscuro al pasar el mouse */
         }
          .hidden {
             display: none;
@@ -62,13 +65,13 @@
             height: 60px;
             bottom: 40px;
             right: 40px;
-            background-color: #25D366; /* Color oficial de WhatsApp */
-            color: #FFF;
+            background-color: #25D366; /* Verde WhatsApp (mantener por reconocimiento de marca) */
+            color: #FFF; /* Blanco para el ícono */
             border-radius: 50px;
             text-align: center;
-            font-size: 30px; /* Tamaño del ícono */
+            font-size: 30px;
             box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
-            z-index: 100; /* Asegura que esté por encima de otros elementos, pero debajo del modal si es necesario */
+            z-index: 100;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -76,34 +79,50 @@
         }
 
         .whatsapp-fab:hover {
-            transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+            transform: scale(1.1);
             box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
         }
+
+        /* Clases de utilidad para colores (ejemplo, podrían definirse más si es necesario) */
+        .text-professional-blue { color: #1d4ed8; } /* Azul para profesionalismo (Ej: blue-700) */
+        .bg-professional-blue { background-color: #1d4ed8; }
+        .text-luxury-purple { color: #7e22ce; } /* Púrpura para lujo (Ej: purple-700) */
+        .bg-luxury-purple { background-color: #7e22ce; }
+        .text-elegant-black { color: #1f2937; } /* Negro/Gris oscuro para elegancia (Ej: gray-800) */
+        .bg-elegant-black { background-color: #111827; } /* Un negro más suave que el puro (Ej: gray-900) */
+        .bg-clean-white { background-color: #ffffff; }
+        .text-clean-white { color: #ffffff; }
+
+        /* Colores de acento para CTAs */
+        .bg-cta-yellow { background-color: #f59e0b; } /* Amarillo para CTAs (Ej: yellow-500) */
+        .bg-cta-yellow:hover { background-color: #d97706; } /* Amarillo más oscuro al hover (Ej: yellow-600) */
+        .text-cta-yellow-content { color: #1f2937; } /* Texto oscuro para buena legibilidad en amarillo */
+
     </style>
      <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Montserrat:wght@800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-clean-white text-elegant-black">
 
-    <div class="bg-purple-600 text-white text-sm text-center py-2 px-4">
-        <span class="bg-yellow-400 text-black font-bold text-xs py-0.5 px-2 rounded mr-2">NUEVO</span>
-        <span>Anunciadas nuevas fechas para Talleres 2025:</span>
-        <a href="#" id="new-announcement-link" class="underline hover:text-yellow-300 ml-1">Descubre si es para ti →</a>
+    <div class="bg-professional-blue text-clean-white text-sm text-center py-2 px-4">
+        <span class="bg-cta-yellow text-cta-yellow-content font-bold text-xs py-0.5 px-2 rounded mr-2">NUEVO</span>
+        <span>Nuevas colecciones de sillas para eventos 2025:</span>
+        <a href="#productos" id="new-announcement-link" class="underline hover:text-yellow-300 ml-1">Descubre nuestros modelos →</a>
     </div>
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <header class="bg-clean-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="text-2xl text-gray-900 tracking-tight" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">
-                <a href="#">EscuelaBíblicaKids</a>
+            <div class="text-2xl text-professional-blue tracking-tight font-bold" style="font-family: 'Inter', sans-serif;">
+                <a href="#">TOLDOSprueba</a>
             </div>
             <div class="hidden md:flex space-x-8 items-center">
-                <a href="#" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Inicio</a>
-                <a href="#quienes-somos" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Quiénes Somos</a>
-                <a href="#recursos" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Recursos</a>
-                <a href="#testimonios" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Testimonios</a>
-                <a href="#" id="nav-donate-link" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Donar</a>
-                 <a href="#" id="nav-contacto-link" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Contacto</a>
+                <a href="#" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Inicio</a>
+                <a href="#quienes-somos" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Quiénes Somos</a>
+                <a href="#productos" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Productos</a>
+                <a href="#testimonios" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Testimonios</a>
+                <a href="#galeria" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Galería</a>
+                <a href="#" id="nav-contacto-link" class="text-gray-700 hover:text-professional-blue text-sm transition duration-300">Contacto</a>
             </div>
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
@@ -111,196 +130,207 @@
                 </button>
             </div>
         </nav>
-        <div id="mobile-menu" class="md:hidden hidden bg-white py-2 border-t border-gray-200">
-            <a href="#" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Inicio</a>
-            <a href="#quienes-somos" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Quiénes Somos</a>
-            <a href="#recursos" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Recursos</a>
-            <a href="#testimonios" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Testimonios</a>
-            <a href="#" id="mobile-donate-link" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Donar</a>
-            <a href="#" id="mobile-contacto-link" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Contacto</a>
+        <div id="mobile-menu" class="md:hidden hidden bg-clean-white py-2 border-t border-gray-200">
+            <a href="#" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Inicio</a>
+            <a href="#quienes-somos" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Quiénes Somos</a>
+            <a href="#productos" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Productos</a>
+            <a href="#testimonios" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Testimonios</a>
+            <a href="#galeria" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Galería</a>
+            <a href="#" id="mobile-contacto-link" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 hover:text-professional-blue text-sm">Contacto</a>
         </div>
     </header>
 
-    <section class="bg-white py-20 text-center">
+    <section class="bg-clean-white py-20 text-center">
          <div class="container mx-auto px-6">
-            <h1 class="text-4xl md:text-6xl mb-4 leading-tight text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">
-                Enseñando la Palabra de Dios a los <span class="text-purple-600">Niños</span>
+            <h1 class="text-4xl md:text-6xl mb-4 leading-tight text-gray-900 font-extrabold">
+                Sillas Elegantes y Funcionales para tus <span class="text-luxury-purple">Eventos</span>
             </h1>
-            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-600">
-                Recursos bíblicos creativos y prácticos para iglesias, padres y maestros.
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-700">
+                Ofrecemos alquiler y venta de sillas de alta calidad para bodas, conferencias, fiestas y eventos corporativos.
             </p>
              <button id="open-modal-button-hero"
-               class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block">
-                ¡QUIERO ACCESO AHORA!
+               class="bg-cta-yellow hover:bg-yellow-600 text-cta-yellow-content font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block shadow-lg hover:shadow-xl">
+                VER CATÁLOGO
             </button>
         </div>
     </section>
 
-    <section id="video-section" class="py-8 bg-gray-100">
-        <div class="container mx-auto px-6">
-             <div style="padding:56.22% 0 0 0;position:relative; max-width: 700px; margin: 0 auto;"> <iframe src="https://player.vimeo.com/video/1082687535?h=d7e1a100ed&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                         frameborder="0"
-                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                         style="position:absolute;top:0;left:0;width:100%;height:100%;"
-                         title="(ENLAZO PAGINA)2DA PARTE DE COMO SUBIR WEB">
-                </iframe> </div>
-            <script src="https://player.vimeo.com/api/player.js"></script>
+    <section id="image-showcase-section" class="py-12 bg-gray-100"> <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-professional-blue">Nuestra Calidad en Imagen</h2>
+             <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
+                 <img src="https://i.imgur.com/ShjOK9Z.jpeg"
+                      alt="[Imagen de muestra de sillas TOLDOSprueba en un evento elegante]"
+                      class="w-full h-auto object-cover"
+                      onerror="this.onerror=null; this.src='https://placehold.co/800x500/cccccc/ffffff?text=Error+al+cargar+imagen'"
+                 />
             </div>
+        </div>
     </section>
-    <section id="quienes-somos" class="py-16 bg-white">
+
+    <section id="quienes-somos" class="py-16 bg-clean-white">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-8 text-gray-800">Quiénes Somos</h2>
+            <h2 class="text-3xl font-bold mb-10 text-professional-blue">Quiénes Somos TOLDOSprueba</h2>
             <div class="flex flex-col md:flex-row items-center justify-center gap-12">
                 <div class="md:w-1/2">
                      <img
-                        src="https://placehold.co/600x400/e2e8f0/334155?text=Imagen+Equipo"
-                        alt="Equipo"
-                        class="rounded-lg shadow-lg mx-auto"
+                        src="https://placehold.co/600x400/e0e7ff/1d4ed8?text=Equipo+TOLDOSprueba"
+                        alt="[Imagen del equipo de TOLDOSprueba o un montaje de sillas elegantes]"
+                        class="rounded-lg shadow-xl mx-auto"
                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/ffffff?text=Error+Imagen'"
                      />
                 </div>
                 <div class="md:w-1/2 text-left">
-                    <p class="text-lg mb-4">Somos un ministerio apasionado por equipar a la iglesia y a las familias para discipular a la próxima generación. Creemos que la Biblia es la Palabra de Dios y tiene el poder de transformar vidas.</p>
-                    <p class="text-lg">Ofrecemos materiales didácticos, capacitación y acompañamiento para que la enseñanza bíblica sea efectiva, relevante y divertida para los niños.</p>
+                    <p class="text-lg mb-4 text-gray-700">Somos un equipo apasionado por proveer el mobiliario perfecto que eleve la calidad y estética de tus eventos. Creemos que cada detalle cuenta para crear experiencias memorables.</p>
+                    <p class="text-lg text-gray-700">Ofrecemos un servicio profesional, puntual y flexible, adaptándonos a las necesidades de cada cliente, desde planificadores de eventos hasta particulares.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="recursos" class="py-16 bg-blue-50">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-12 text-gray-800">Nuestros Recursos</h2>
+    <section id="productos" class="py-16 bg-sky-50"> <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12 text-professional-blue">Nuestros Productos Destacados</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                <div class="bg-clean-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 flex flex-col">
                      <img
-                        src="https://placehold.co/400x300/a5f3fc/0891b2?text=Lecciones+B%C3%ADblicas"
-                        alt="Recurso Lecciones Bíblicas"
+                        src="https://placehold.co/400x300/c4b5fd/4338ca?text=Sillas+Tiffany"
+                        alt="[Imagen de Sillas Tiffany para bodas]"
                         class="rounded-md mb-4 w-full h-48 object-cover"
                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
                      />
-                    <h3 class="text-xl font-semibold mb-2 text-blue-700">Lecciones Bíblicas</h3>
-                    <p class="text-gray-600 mb-4">Series completas de lecciones para escuela dominical o grupos pequeños.</p>
-                    <a href="#" id="ver-mas-lecciones" data-resource-name="Lecciones Bíblicas" class="text-blue-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                    <h3 class="text-xl font-semibold mb-2 text-luxury-purple">Sillas Tiffany (Elegancia Clásica)</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">Ideales para bodas y eventos formales. Disponibles en varios colores para combinar con tu decoración.</p>
+                    <a href="#" data-resource-name="Sillas Tiffany" class="text-yellow-600 hover:text-yellow-700 font-medium resource-view-more-link self-start mt-auto">Ver más detalles</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                <div class="bg-clean-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 flex flex-col">
                      <img
-                        src="https://placehold.co/400x300/fecaca/991b1b?text=Manualidades"
-                        alt="Recurso Manualidades y Actividades"
+                        src="https://placehold.co/400x300/a5f3fc/0e7490?text=Sillas+Avant+Garde"
+                        alt="[Imagen de Sillas Avant Garde para conferencias]"
                         class="rounded-md mb-4 w-full h-48 object-cover"
                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
                      />
-                    <h3 class="text-xl font-semibold mb-2 text-red-700">Manualidades y Actividades</h3>
-                    <p class="text-gray-600 mb-4">Ideas creativas para reforzar el aprendizaje bíblico de forma práctica.</p>
-                    <a href="#" data-resource-name="Manualidades y Actividades"
-                       class="text-red-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                    <h3 class="text-xl font-semibold mb-2 text-professional-blue">Sillas Avant Garde (Diseño Moderno)</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">Perfectas para conferencias y eventos corporativos con un toque contemporáneo y sofisticado.</p>
+                    <a href="#" data-resource-name="Sillas Avant Garde" class="text-yellow-600 hover:text-yellow-700 font-medium resource-view-more-link self-start mt-auto">Ver más detalles</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                <div class="bg-clean-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 flex flex-col">
                      <img
-                        src="https://placehold.co/400x300/bbf7d0/15803d?text=Capacitaci%C3%B3n"
-                        alt="Recurso Capacitación para Maestros"
+                        src="https://placehold.co/400x300/d1d5db/1f2937?text=Mesas+y+Complementos"
+                        alt="[Imagen de Mesas y complementos para eventos]"
                         class="rounded-md mb-4 w-full h-48 object-cover"
                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
                      />
-                    <h3 class="text-xl font-semibold mb-2 text-green-700">Capacitación para Maestros</h3>
-                    <p class="text-gray-600 mb-4">Talleres y cursos para equipar a líderes y voluntarios del ministerio infantil.</p>
-                    <a href="#" data-resource-name="Capacitación para Maestros"
-                       class="text-green-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-700">Mesas y Complementos</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">Además de sillas, ofrecemos una variedad de mesas, mantelería y otros accesorios para completar tu evento.</p>
+                    <a href="#" data-resource-name="Mesas y Complementos" class="text-yellow-600 hover:text-yellow-700 font-medium resource-view-more-link self-start mt-auto">Ver más detalles</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="testimonios" class="py-16 bg-white">
+    <section id="testimonios" class="py-16 bg-clean-white">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-12 text-gray-800">Testimonios</h2>
+            <h2 class="text-3xl font-bold mb-12 text-professional-blue">Lo que Dicen Nuestros Clientes</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
-                    <img src="https://placehold.co/150x200/e0e0e0/999999?text=Persona+Feliz+1" alt="Testimonio de Cliente Satisfecho 1" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Ana G. - Maestra Escuela Dominical</h3>
-                    <p class="text-sm text-gray-600 text-center">"Los materiales son increíblemente creativos y fáciles de usar. ¡Mis niños los aman!"</p>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="https://placehold.co/120x120/ffedd5/ea580c?text=AG" alt="[Avatar de Ana G., Wedding Planner]" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-2 border-luxury-purple" onerror="this.onerror=null; this.src='https://placehold.co/120x120/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1">Ana G. - Wedding Planner</h3>
+                    <p class="text-sm text-gray-600">"La calidad de las sillas y el profesionalismo de TOLDOSprueba superaron mis expectativas. ¡Mis clientes quedaron encantados!"</p>
                 </div>
-                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
-                    <img src="https://placehold.co/150x200/d0d0d0/999999?text=Persona+Feliz+2" alt="Testimonio de Cliente Satisfecho 2" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Carlos P. - Padre de Familia</h3>
-                    <p class="text-sm text-gray-600 text-center">"Finalmente encontré recursos que me ayudan a enseñar la Biblia a mis hijos de forma divertida y significativa."</p>
+                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="https://placehold.co/120x120/dbeafe/1e40af?text=CP" alt="[Avatar de Carlos P., Gerente de Eventos]" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-2 border-professional-blue" onerror="this.onerror=null; this.src='https://placehold.co/120x120/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1">Carlos P. - Gerente de Eventos Corp.</h3>
+                    <p class="text-sm text-gray-600">"Servicio impecable y sillas en perfecto estado. Fundamental para la imagen de nuestros eventos corporativos."</p>
                 </div>
-                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
-                    <img src="https://placehold.co/150x200/c0c0c0/999999?text=Persona+Feliz+3" alt="Testimonio de Cliente Satisfecho 3" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Laura M. - Líder Ministerio Infantil</h3>
-                    <p class="text-sm text-gray-600 text-center">"La capacitación para maestros transformó nuestro ministerio. ¡Totalmente recomendado!"</p>
+                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="https://placehold.co/120x120/f3e8ff/7e22ce?text=LM" alt="[Avatar de Laura M., Cliente Particular]" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-2 border-luxury-purple" onerror="this.onerror=null; this.src='https://placehold.co/120x120/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1">Laura M. - Cliente Particular</h3>
+                    <p class="text-sm text-gray-600">"Alquilé sillas para mi fiesta y todo fue perfecto. Entrega puntual y excelente atención. ¡Totalmente recomendado!"</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="nueva-seccion" class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-             <div class="grid grid-cols-1 gap-8 max-w-lg mx-auto">
-                 <div class="text-center mb-8">
-                     <button id="open-modal-button-nueva-seccion"
-                        class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block">
-                         ¡QUIERO ACCESO AHORA!
-                     </button>
+    <section id="galeria" class="py-16 bg-gray-50"> <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6 text-professional-blue">Inspírate con Nuestros Eventos</h2>
+             <p class="text-lg mb-10 max-w-2xl mx-auto text-gray-600">
+                Visualiza cómo nuestras sillas pueden transformar tu celebración.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <div class="bg-clean-white rounded-lg shadow-lg overflow-hidden">
+                     <img src="https://placehold.co/600x400/e9d5ff/581c87?text=Boda+Elegante" alt="[Imagen de una boda elegante con sillas TOLDOSprueba]" class="w-full h-64 object-cover">
+                     <div class="p-4">
+                        <p class="text-gray-700 font-semibold">Evento Boda Elegante</p>
+                     </div>
                  </div>
-                 <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-6">
-                     <p class="text-gray-500 text-xl font-semibold">Contenido Adicional 1</p>
+                 <div class="bg-clean-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/600x400/bfdbfe/1e3a8a?text=Conferencia+Exitosa" alt="[Imagen de una conferencia corporativa con sillas TOLDOSprueba]" class="w-full h-64 object-cover">
+                     <div class="p-4">
+                        <p class="text-gray-700 font-semibold">Conferencia Corporativa Exitosa</p>
+                     </div>
                  </div>
-                 <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-6">
-                     <p class="text-gray-500 text-xl font-semibold">Contenido Adicional 2</p>
+                 <div class="bg-clean-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/600x400/fef9c3/b45309?text=Fiesta+Privada" alt="[Imagen de una fiesta privada con sillas TOLDOSprueba]" class="w-full h-64 object-cover">
+                     <div class="p-4">
+                        <p class="text-gray-700 font-semibold">Celebración Exclusiva</p>
+                     </div>
                  </div>
+            </div>
+             <div class="mt-12">
+                 <button id="open-modal-button-nueva-seccion"
+                    class="bg-cta-yellow hover:bg-yellow-600 text-cta-yellow-content font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block shadow-lg hover:shadow-xl">
+                     SOLICITAR ASESORÍA
+                 </button>
              </div>
         </div>
     </section>
 
-    <section id="garantia" class="py-16 bg-gray-100">
+    <section id="garantia" class="py-16 bg-clean-white">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                 <div class="md:col-span-1">
-                    <img src="https://i.imgur.com/XmelnjE.png" alt="Sello de Garantía 100% Satisfacción por 7 Días" class="mx-auto w-48 h-auto md:w-full max-w-[250px]" onerror="this.onerror=null; this.src='https://placehold.co/200/cccccc/ffffff?text=Sello+Garantia'" />
+                    <img src="https://placehold.co/250x250/dbeafe/1d4ed8?text=Sello+Calidad+TOLDOSprueba" alt="[Sello de Garantía y Calidad TOLDOSprueba]" class="mx-auto w-48 h-auto md:w-full max-w-[200px]" onerror="this.onerror=null; this.src='https://placehold.co/200/cccccc/ffffff?text=Sello+Garantia'" />
                 </div>
                 <div class="md:col-span-2 text-center md:text-left">
-                    <h3 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">Tu Inversión 100% Segura: Garantía de 7 Días</h3>
-                    <p class="text-lg text-gray-600 mb-4">Es muy sencillo y fácil...</p>
-                    <p class="text-gray-700 mb-4">Tendrás acceso al material completo, y si en 7 días ves que el contenido no es para ti, o no era lo que esperabas, te devolvemos el 100% de la inversión. Nuestro objetivo es aportar valor real a la educación de nuestros niños.</p>
-                    <p class="text-gray-800 font-semibold mb-4">Plataforma online 100% segura</p>
-                    <p class="text-gray-700">Podrás acceder a los contenidos para siempre. Acceso de por vida para ti. El material estará disponible las 24 horas del día, para que puedas acceder las veces que quieras y donde prefieras, ya sea en tu móvil, tablet u ordenador.</p>
+                    <h3 class="text-2xl lg:text-3xl font-bold text-professional-blue mb-3">Tu Evento Perfecto, Nuestra Garantía</h3>
+                    <p class="text-lg text-gray-700 mb-4">Garantizamos la calidad, puntualidad y el perfecto estado de nuestro mobiliario. Si algo no cumple con tus expectativas, nos comprometemos a solucionarlo de inmediato.</p>
+                    <p class="text-gray-700 font-semibold mb-2 text-luxury-purple">Proceso de cotización y reserva 100% seguro y transparente.</p>
+                    <p class="text-gray-600">Accede a nuestro catálogo y solicita tu cotización online. Nuestro equipo te contactará para ofrecerte la mejor solución adaptada a tu evento y presupuesto.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="acceso" class="py-16 bg-white">
-        <div class="container mx-auto px-6">
+    <section id="acceso" class="py-16 bg-sky-50"> <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                 <div>
-                    <img src="https://placehold.co/300x400/e2e8f0/334155?text=Kit+Completo+EBK" alt="Kit Principal Escuela Bíblica Kids" class="mx-auto rounded-lg shadow-md w-auto max-w-xs" onerror="this.onerror=null; this.src='https://placehold.co/300x400/cccccc/ffffff?text=Error+Kit'" />
+                    <img src="https://placehold.co/400x500/e0e7ff/1d4ed8?text=Variedad+Sillas+TOLDOSprueba" alt="[Montaje de diferentes estilos de sillas ofrecidas por TOLDOSprueba]" class="mx-auto rounded-lg shadow-xl w-auto max-w-sm" onerror="this.onerror=null; this.src='https://placehold.co/300x400/cccccc/ffffff?text=Error+Kit'" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 uppercase tracking-wider mb-1">Recapitulemos</p>
-                    <h2 class="text-2xl md:text-3xl font-bold text-purple-600 mb-6">TODO A LO QUE TENDRÁS ACCESO:</h2>
+                    <p class="text-sm text-gray-500 uppercase tracking-wider mb-1">Ventajas Exclusivas</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-luxury-purple mb-6">AL ELEGIR TOLDOSprueba, OBTIENES:</h2>
                     <ul class="space-y-3 text-gray-700">
                         <li class="flex items-start">
-                            <span class="text-purple-600 mr-2 mt-1">✔</span>
-                            <span>Kit Completo Escuela Bíblica <span class="font-semibold">(Valor $29.90)</span></span>
+                            <span class="text-professional-blue mr-2 mt-1 text-xl">✔</span>
+                            <span>Catálogo Variado y de Alta Calidad <span class="font-semibold">(Diseños para cada tipo de ocasión)</span></span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-purple-600 mr-2 mt-1">✔</span>
-                            <span>Bonus: Dinámicas Divertidas <span class="font-semibold">(Valor $17.00)</span></span>
+                            <span class="text-professional-blue mr-2 mt-1 text-xl">✔</span>
+                            <span>Asesoramiento Personalizado <span class="font-semibold">(Te ayudamos a elegir lo mejor para tu evento)</span></span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-purple-600 mr-2 mt-1">✔</span>
-                            <span>Bonus: Historias Bíblicas Ilustradas <span class="font-semibold">(Valor $9.90)</span></span>
+                            <span class="text-professional-blue mr-2 mt-1 text-xl">✔</span>
+                            <span>Entrega, Montaje y Desmontaje Profesional <span class="font-semibold">(Nos encargamos de la logística)</span></span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-purple-600 mr-2 mt-1">✔</span>
-                            <span>Bonus: Actividades Lúdicas <span class="font-semibold">(Valor $9.90)</span></span>
+                            <span class="text-professional-blue mr-2 mt-1 text-xl">✔</span>
+                            <span>Precios Competitivos <span class="font-semibold">(La mejor relación calidad-precio del mercado)</span></span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-purple-600 mr-2 mt-1">✔</span>
-                            <span>Bonus: Guía de Alfabetización <span class="font-semibold">(Valor $14.90)</span></span>
+                            <span class="text-professional-blue mr-2 mt-1 text-xl">✔</span>
+                            <span>Flexibilidad y Confianza <span class="font-semibold">(Adaptados a tus necesidades y presupuesto)</span></span>
                         </li>
                     </ul>
-                    <p class="mt-6 text-gray-600 font-medium">¡Todo esto por separado costaría más de <span class="font-bold">$80 dólares</span>!</p>
+                    <p class="mt-6 text-gray-800 font-medium text-lg">¡Todo lo necesario para que tu evento sea un <span class="text-luxury-purple font-bold">éxito memorable</span>!</p>
                 </div>
             </div>
         </div>
@@ -309,32 +339,36 @@
     <div id="contact-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <span class="modal-close-button" id="close-modal-button">&times;</span>
-            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Agenda una Llamada</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center text-professional-blue">Solicita tu Cotización</h2>
             <div class="max-w-md mx-auto">
-                <form action="#" method="POST">
+                <form action="#" method="POST" id="contactFormModal">
                     <div class="mb-4">
-                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <label for="modal_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo:</label>
+                        <input type="text" id="modal_name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue" required>
                     </div>
                     <div class="mb-4">
-                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
-                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <label for="modal_email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                        <input type="email" id="modal_email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue" required>
                     </div>
                      <div class="mb-4">
-                        <label for="whatsapp" class="block text-gray-700 text-sm font-bold mb-2">Whatsapp:</label>
-                        <input type="tel" id="whatsapp" name="whatsapp" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <label for="modal_whatsapp" class="block text-gray-700 text-sm font-bold mb-2">Teléfono/WhatsApp (Opcional):</label>
+                        <input type="tel" id="modal_whatsapp" name="whatsapp" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue">
                     </div>
                      <div class="mb-4">
-                        <label for="ecommerce_platform" class="block text-gray-700 text-sm font-bold mb-2">¿Cuál es tu plataforma de ecommerce?:</label>
-                        <input type="text" id="ecommerce_platform" name="ecommerce_platform" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <label for="modal_event_type" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Evento:</label>
+                        <input type="text" id="modal_event_type" name="event_type" placeholder="Ej: Boda, Conferencia, Fiesta Privada" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue">
                     </div>
                      <div class="mb-6">
-                        <label for="ecommerce_url" class="block text-gray-700 text-sm font-bold mb-2">¿Cuál es la URL de tu ecommerce?:</label>
-                        <input type="url" id="ecommerce_url" name="ecommerce_url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <label for="modal_event_date" class="block text-gray-700 text-sm font-bold mb-2">Fecha Estimada del Evento:</label>
+                        <input type="date" id="modal_event_date" name="event_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue">
+                    </div>
+                    <div class="mb-6">
+                        <label for="modal_message" class="block text-gray-700 text-sm font-bold mb-2">Mensaje Adicional:</label>
+                        <textarea id="modal_message" name="message" rows="3" placeholder="Cuéntanos más sobre tus necesidades (cantidad de sillas, estilos, etc.)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-professional-blue"></textarea>
                     </div>
                     <div class="flex items-center justify-center">
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
-                            Agendar Llamada
+                        <button type="submit" class="bg-cta-yellow hover:bg-yellow-600 text-cta-yellow-content font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 shadow-md hover:shadow-lg">
+                            ENVIAR SOLICITUD
                         </button>
                     </div>
                 </form>
@@ -342,16 +376,15 @@
         </div>
     </div>
 
-
-    <footer class="bg-gray-800 text-white py-10">
+    <footer class="bg-elegant-black text-gray-300 py-10">
         <div class="container mx-auto px-6 text-center">
             <div class="mb-4">
-                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="text-gray-400 hover:text-cta-yellow mx-3 text-xl transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-cta-yellow mx-3 text-xl transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-cta-yellow mx-3 text-xl transition-colors duration-300"><i class="fab fa-youtube"></i></a>
             </div>
-            <p class="text-gray-400 text-sm">&copy; 2025 Escuela Bíblica Kids (Réplica). Todos los derechos reservados.</p>
-            <p class="text-gray-400 text-sm mt-1">Diseño inspirado en escuelabiblicakids.com</p>
+            <p class="text-gray-400 text-sm">&copy; 2025 TOLDOSprueba. Todos los derechos reservados.</p>
+            <p class="text-gray-500 text-xs mt-1">Diseño Web Profesional para Eventos.</p>
         </div>
     </footer>
 
@@ -371,21 +404,19 @@
 
             const mobileLinks = mobileMenu.querySelectorAll('a');
             mobileLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                     // Solo ocultar el menú si el enlace no es el de contacto (que ahora abre el modal)
-                     if (link.id !== 'mobile-contacto-link') {
-                         if (!link.href.includes('#') || link.pathname !== window.location.pathname) {
-                            return;
+                link.addEventListener('click', (event) => {
+                     if (link.id === 'mobile-contacto-link' || (link.getAttribute('href') && link.getAttribute('href').startsWith('#open-modal'))) {
+                        // No cerrar el menú si es para abrir el modal, el script del modal lo manejará
+                     } else if (link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
+                         // Para enlaces de anclaje en la misma página
+                         const targetElement = document.querySelector(link.getAttribute('href'));
+                         if (targetElement) {
+                            // event.preventDefault(); // Evitar el salto brusco
+                            // window.scrollTo({ top: targetElement.offsetTop - 70, behavior: 'smooth' }); // 70px para el header fijo
+                            mobileMenu.classList.add('hidden'); // Ocultar menú después del clic
                          }
-                         if (link.getAttribute('href') === '#' || link.href.endsWith('#')) {
-                            if (!mobileMenu.classList.contains('hidden')) {
-                                 if (link.getAttribute('href') === '#') {
-                                     mobileMenu.classList.add('hidden');
-                                 }
-                            }
-                            return;
-                         }
-                         mobileMenu.classList.add('hidden');
+                     } else {
+                        mobileMenu.classList.add('hidden');
                      }
                 });
             });
@@ -395,98 +426,80 @@
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('contact-modal');
             const closeButton = document.getElementById('close-modal-button');
-            const openButtons = document.querySelectorAll('#open-modal-button-hero, #open-modal-button-nueva-seccion'); // Botones que abren el modal
-            const navContactLink = document.getElementById('nav-contacto-link'); // Enlace de contacto en nav principal
-            const mobileContactLink = document.getElementById('mobile-contacto-link'); // Enlace de contacto en menú móvil
+            // Botones que abren el modal de contacto/cotización
+            const openModalButtons = document.querySelectorAll('#open-modal-button-hero, #open-modal-button-nueva-seccion, #nav-contacto-link, #mobile-contacto-link');
 
-            // Función para abrir el modal
-            function openModal() {
+            function openModal(event) {
+                if(event && typeof event.preventDefault === 'function') event.preventDefault(); // Prevenir comportamiento por defecto si es un enlace
                 if (modal) modal.classList.remove('hidden');
+                // Si se abrió desde el menú móvil, cerrar el menú
+                if (mobileMenu && !mobileMenu.classList.contains('hidden') && event && event.currentTarget.id === 'mobile-contacto-link') {
+                    mobileMenu.classList.add('hidden');
+                }
             }
 
-            // Función para cerrar el modal
             function closeModal() {
                 if (modal) modal.classList.add('hidden');
             }
 
-            // Event listeners para abrir el modal con los botones "Quiero Acceso Ahora"
-            openButtons.forEach(button => {
+            openModalButtons.forEach(button => {
                 button.addEventListener('click', openModal);
             });
 
-            // Event listeners para abrir el modal con los enlaces de "Contacto"
-            if (navContactLink) {
-                navContactLink.addEventListener('click', function(event) {
-                    event.preventDefault(); // Previene el comportamiento por defecto del enlace
-                    openModal();
-                });
-            }
-             if (mobileContactLink) {
-                mobileContactLink.addEventListener('click', function(event) {
-                    event.preventDefault(); // Previene el comportamiento por defecto del enlace
-                    openModal();
-                     // Oculta el menú móvil al abrir el modal desde él
-                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            }
-
-
-            // Event listener para cerrar el modal con el botón de cerrar
             if (closeButton) {
                 closeButton.addEventListener('click', closeModal);
             }
 
-            // Event listener para cerrar el modal haciendo clic fuera del contenido del modal
             if (modal) {
                 modal.addEventListener('click', function(event) {
-                    if (event.target === modal) { // Si el clic fue directamente en el overlay
+                    if (event.target === modal) {
                         closeModal();
                     }
                 });
             }
 
+            // DataLayer Pushes
+            function pushToDataLayer(eventData) {
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push(eventData);
+            }
 
-            // Scripts para enviar eventos al DataLayer (mantengo los existentes y ajusto el del formulario)
-            // Seguimiento del clic en el botón CTA principal de la sección Héroe (ahora abre modal)
-            const ctaHeroButton = document.getElementById('open-modal-button-hero'); // Usamos el nuevo ID del botón
+            // Seguimiento CTA Hero
+            const ctaHeroButton = document.getElementById('open-modal-button-hero');
             if (ctaHeroButton) {
                 ctaHeroButton.addEventListener('click', function() {
-                    dataLayer.push({
-                        'event': 'cta_click', // Nombre genérico del evento
-                        'event_category': 'CTA', // Categoría del evento
-                        'event_action': 'click', // Acción realizada
-                        'event_label': 'Abrir Formulario - Hero', // Etiqueta descriptiva
-                        // No hay link_url ya que abre modal, no navega
-                        'button_text': this.textContent.trim() // Texto del botón
-                    });
-                });
-            }
-
-            // Seguimiento del clic en el botón CTA de la "Nueva Sección" (ahora abre modal)
-            const ctaNuevaSeccionButton = document.getElementById('open-modal-button-nueva-seccion'); // Usamos el nuevo ID del botón
-            if (ctaNuevaSeccionButton) {
-                ctaNuevaSeccionButton.addEventListener('click', function() {
-                    dataLayer.push({
+                    pushToDataLayer({
                         'event': 'cta_click',
                         'event_category': 'CTA',
-                        'event_action': 'click',
-                        'event_label': 'Abrir Formulario - Nueva Seccion',
-                         // No hay link_url ya que abre modal, no navega
-                        'button_text': this.textContent.trim() // Texto del botón
+                        'event_action': 'click_open_modal',
+                        'event_label': 'Ver Catálogo - Hero',
+                        'button_text': this.textContent.trim()
+                    });
+                });
+            }
+            
+            // Seguimiento CTA "Solicitar Asesoría" (antes Nueva Sección)
+            const ctaNuevaSeccionButton = document.getElementById('open-modal-button-nueva-seccion');
+            if (ctaNuevaSeccionButton) {
+                ctaNuevaSeccionButton.addEventListener('click', function() {
+                    pushToDataLayer({
+                        'event': 'cta_click',
+                        'event_category': 'CTA',
+                        'event_action': 'click_open_modal',
+                        'event_label': 'Solicitar Asesoría - Galeria',
+                        'button_text': this.textContent.trim()
                     });
                 });
             }
 
-            // Seguimiento de clics en los enlaces "Ver más" de los recursos
+            // Seguimiento "Ver más detalles" en productos
             const resourceLinks = document.querySelectorAll('.resource-view-more-link');
             resourceLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
+                link.addEventListener('click', function() {
                     const resourceName = this.getAttribute('data-resource-name') || 'Desconocido';
-                    dataLayer.push({
-                        'event': 'resource_link_click',
-                        'event_category': 'Recursos',
+                    pushToDataLayer({
+                        'event': 'product_link_click',
+                        'event_category': 'Productos',
                         'event_action': 'click_ver_mas',
                         'event_label': resourceName,
                         'link_url': this.href,
@@ -495,105 +508,73 @@
                 });
             });
 
-            // Seguimiento del clic en el enlace del anuncio nuevo
+            // Seguimiento clic en anuncio nuevo (barra superior)
             const newAnnouncementLink = document.getElementById('new-announcement-link');
             if (newAnnouncementLink) {
                 newAnnouncementLink.addEventListener('click', function() {
-                    dataLayer.push({
+                    pushToDataLayer({
                         'event': 'announcement_click',
-                        'event_category': 'Header Announcement',
+                        'event_category': 'Top Banner Announcement',
                         'event_action': 'click',
                         'event_label': this.textContent.trim(),
                         'link_url': this.href
                     });
                 });
             }
-
-            // Seguimiento de clics en el botón Donar (Navegación principal)
-            const navDonateLink = document.getElementById('nav-donate-link');
-            if (navDonateLink) {
-                navDonateLink.addEventListener('click', function() {
-                    dataLayer.push({
-                        'event': 'navigation_click',
-                        'event_category': 'Header Navigation',
-                        'event_action': 'click_donate',
-                        'event_label': 'Donar - Nav',
-                        'link_url': this.href
-                    });
-                });
-            }
-
-            // Seguimiento de clics en el botón Donar (Menú móvil)
-            const mobileDonateLink = document.getElementById('mobile-donate-link');
-            if (mobileDonateLink) {
-                mobileDonateLink.addEventListener('click', function() {
-                     dataLayer.push({
-                        'event': 'navigation_click',
-                        'event_category': 'Mobile Navigation',
-                        'event_action': 'click_donate',
-                        'event_label': 'Donar - Mobile',
-                        'link_url': this.href
-                    });
-                });
-            }
-
-             // Seguimiento de clics en el enlace de Contacto (Navegación principal) - Ahora abre modal
+            
+            // Seguimiento clics en Contacto (Nav principal y móvil) - abren modal
+            const navContactLink = document.getElementById('nav-contacto-link');
             if (navContactLink) {
                 navContactLink.addEventListener('click', function() {
-                    dataLayer.push({
+                    pushToDataLayer({
                         'event': 'navigation_click',
                         'event_category': 'Header Navigation',
-                        'event_action': 'click_contact_open_modal', // Cambiado para reflejar que abre modal
+                        'event_action': 'click_contact_open_modal',
                         'event_label': 'Contacto - Nav',
-                        // No hay link_url ya que abre modal
                     });
                 });
             }
-
-            // Seguimiento de clics en el enlace de Contacto (Menú móvil) - Ahora abre modal
+            const mobileContactLink = document.getElementById('mobile-contacto-link');
             if (mobileContactLink) {
                 mobileContactLink.addEventListener('click', function() {
-                    dataLayer.push({
+                    pushToDataLayer({
                         'event': 'navigation_click',
                         'event_category': 'Mobile Navigation',
-                        'event_action': 'click_contact_open_modal', // Cambiado para reflejar que abre modal
+                        'event_action': 'click_contact_open_modal',
                         'event_label': 'Contacto - Mobile',
-                        // No hay link_url ya que abre modal
                     });
                 });
             }
 
-            // Seguimiento del envío del formulario de contacto
-            const contactForm = document.querySelector('#contact-modal form'); // Seleccionamos el formulario dentro del modal
-            if (contactForm) {
-                contactForm.addEventListener('submit', function() {
-                    dataLayer.push({
-                        'event': 'form_submit', // Nombre del evento para envío de formulario
-                        'event_category': 'Contacto', // Categoría del evento
-                        'event_action': 'submit', // Acción: envío
-                        'event_label': 'Formulario Agendar Llamada - PopUp', // Etiqueta descriptiva actualizada
-                        // Puedes añadir más detalles del formulario si es necesario,
-                        // pero ten cuidado con enviar información personal sensible directamente al DataLayer.
+            // Seguimiento envío del formulario de contacto del modal
+            const contactFormModal = document.getElementById('contactFormModal');
+            if (contactFormModal) {
+                contactFormModal.addEventListener('submit', function() {
+                    pushToDataLayer({
+                        'event': 'form_submit',
+                        'event_category': 'Contacto',
+                        'event_action': 'submit_cotizacion',
+                        'event_label': 'Formulario Cotizacion - PopUp',
+                        'form_name': 'Cotizacion Modal'
+                        // Considerar añadir campos del formulario de forma anónima si es relevante y seguro
                     });
                 });
             }
 
-            // Seguimiento del clic en el botón de WhatsApp
+            // Seguimiento clic en botón WhatsApp
             const whatsappButton = document.getElementById('whatsapp-button');
             if (whatsappButton) {
                 whatsappButton.addEventListener('click', function() {
-                    dataLayer.push({
+                    pushToDataLayer({
                         'event': 'contact_click',
                         'event_category': 'Contact',
                         'event_action': 'whatsapp_click',
-                        'event_label': 'WhatsApp FAB', // FAB: Floating Action Button
+                        'event_label': 'WhatsApp FAB',
                         'link_url': this.href
                     });
                 });
             }
-
         });
-
     </script>
 
 </body>

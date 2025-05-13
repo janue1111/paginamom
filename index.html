@@ -183,7 +183,13 @@
                 </div>
                 <div class="md:w-1/2 text-left">
                     <p class="text-lg mb-4 text-gray-700">Somos un equipo apasionado por proveer el mobiliario perfecto que eleve la calidad y estética de tus eventos. Creemos que cada detalle cuenta para crear experiencias memorables.</p>
-                    <p class="text-lg text-gray-700">Ofrecemos un servicio profesional, puntual y flexible, adaptándonos a las necesidades de cada cliente, desde planificadores de eventos hasta particulares.</p>
+                    <p class="text-lg mb-6 text-gray-700">Ofrecemos un servicio profesional, puntual y flexible, adaptándonos a las necesidades de cada cliente, desde planificadores de eventos hasta particulares.</p>
+                    <div class="text-center md:text-left">
+                        <button id="open-modal-button-quienes-somos"
+                           class="bg-cta-yellow hover:bg-yellow-600 text-cta-yellow-content font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block shadow-lg hover:shadow-xl">
+                            SOLICITA TU COTIZACION
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -334,6 +340,12 @@
                         </li>
                     </ul>
                     <p class="mt-6 text-gray-800 font-medium text-lg">¡Todo lo necesario para que tu evento sea un <span class="text-luxury-purple font-bold">éxito memorable</span>!</p>
+                    <div class="mt-8 text-center md:text-left">
+                        <button id="open-modal-button-acceso"
+                           class="bg-cta-yellow hover:bg-yellow-600 text-cta-yellow-content font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block shadow-lg hover:shadow-xl">
+                            SOLICITA TU COTIZACION
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -429,8 +441,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('contact-modal');
             const closeButton = document.getElementById('close-modal-button');
-            // Botones que abren el modal de contacto/cotización
-            const openModalButtons = document.querySelectorAll('#open-modal-button-hero, #open-modal-button-nueva-seccion, #nav-contacto-link, #mobile-contacto-link');
+            // Botones que abren el modal de contacto/cotización - IDs de los nuevos botones agregados
+            const openModalButtons = document.querySelectorAll('#open-modal-button-hero, #open-modal-button-nueva-seccion, #nav-contacto-link, #mobile-contacto-link, #open-modal-button-quienes-somos, #open-modal-button-acceso');
 
             function openModal(event) {
                 if(event && typeof event.preventDefault === 'function') event.preventDefault(); // Prevenir comportamiento por defecto si es un enlace
@@ -490,6 +502,34 @@
                         'event_category': 'CTA',
                         'event_action': 'click_open_modal',
                         'event_label': 'Solicita tu Cotizacion - Galeria', // Etiqueta actualizada
+                        'button_text': this.textContent.trim()
+                    });
+                });
+            }
+
+            // Seguimiento CTA en Quiénes Somos (Nuevo)
+            const ctaQuienesSomosButton = document.getElementById('open-modal-button-quienes-somos');
+            if (ctaQuienesSomosButton) {
+                ctaQuienesSomosButton.addEventListener('click', function() {
+                    pushToDataLayer({
+                        'event': 'cta_click',
+                        'event_category': 'CTA',
+                        'event_action': 'click_open_modal',
+                        'event_label': 'Solicita tu Cotizacion - Quienes Somos', // Nueva etiqueta
+                        'button_text': this.textContent.trim()
+                    });
+                });
+            }
+
+             // Seguimiento CTA en Acceso (Nuevo)
+            const ctaAccesoButton = document.getElementById('open-modal-button-acceso');
+            if (ctaAccesoButton) {
+                ctaAccesoButton.addEventListener('click', function() {
+                    pushToDataLayer({
+                        'event': 'cta_click',
+                        'event_category': 'CTA',
+                        'event_action': 'click_open_modal',
+                        'event_label': 'Solicita tu Cotizacion - Acceso', // Nueva etiqueta
                         'button_text': this.textContent.trim()
                     });
                 });

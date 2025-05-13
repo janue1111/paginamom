@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escuela Bíblica Kids - Réplica con DataLayer y Pop-up</title>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            'event': 'pageView', // Cambiado de 'page_view' a 'pageView'
+            'pageLocation': window.location.href, // Añadido/cambiado a la URL completa
+            'pagePath': window.location.pathname, // Mantengo pagePath si lo prefieres, o lo podrías quitar si solo usas pageLocation
+            'pageTitle': document.title,
+            'referrer': document.referrer // Añadido el referrer
+        });
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos para el pop-up */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            max-width: 90%; /* Ajuste para pantallas pequeñas */
+            max-height: 90%; /* Ajuste para pantallas pequeñas */
+            overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+         .hidden {
+            display: none;
+        }
+
+        /* Estilos para el botón flotante de WhatsApp */
+        .whatsapp-fab {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25D366; /* Color oficial de WhatsApp */
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px; /* Tamaño del ícono */
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+            z-index: 100; /* Asegura que esté por encima de otros elementos, pero debajo del modal si es necesario */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .whatsapp-fab:hover {
+            transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+        }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Montserrat:wght@800&amp;display=swap" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="bg-purple-600 text-white text-sm text-center py-2 px-4">
+        <span class="bg-yellow-400 text-black font-bold text-xs py-0.5 px-2 rounded mr-2">NUEVO</span>
+        <span>Anunciadas nuevas fechas para Talleres 2025:</span>
+        <a href="#" id="new-announcement-link" class="underline hover:text-yellow-300 ml-1">Descubre si es para ti →</a>
+    </div>
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl text-gray-900 tracking-tight" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">
+                <a href="#">EscuelaBíblicaKids</a>
+            </div>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Inicio</a>
+                <a href="#quienes-somos" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Quiénes Somos</a>
+                <a href="#recursos" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Recursos</a>
+                <a href="#testimonios" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Testimonios</a>
+                <a href="#" id="nav-donate-link" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Donar</a>
+                 <a href="#" id="nav-contacto-link" class="text-gray-500 hover:text-purple-600 text-sm transition duration-300">Contacto</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden bg-white py-2 border-t border-gray-200">
+            <a href="#" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Inicio</a>
+            <a href="#quienes-somos" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Quiénes Somos</a>
+            <a href="#recursos" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Recursos</a>
+            <a href="#testimonios" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Testimonios</a>
+            <a href="#" id="mobile-donate-link" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Donar</a>
+            <a href="#" id="mobile-contacto-link" class="block px-6 py-2 text-gray-500 hover:bg-gray-100 hover:text-purple-600 text-sm">Contacto</a>
+        </div>
+    </header>
+
+    <section class="bg-white py-20 text-center">
+         <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl mb-4 leading-tight text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">
+                Enseñando la Palabra de Dios a los <span class="text-purple-600">Niños</span>
+            </h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-600">
+                Recursos bíblicos creativos y prácticos para iglesias, padres y maestros.
+            </p>
+             <button id="open-modal-button-hero"
+               class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block">
+                ¡QUIERO ACCESO AHORA!
+            </button>
+        </div>
+    </section>
+
+    <section id="video-section" class="py-8 bg-gray-100">
+        <div class="container mx-auto px-6">
+             <div style="padding:56.22% 0 0 0;position:relative; max-width: 700px; margin: 0 auto;"> <iframe src="https://player.vimeo.com/video/1082687535?h=d7e1a100ed&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                         frameborder="0"
+                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                         style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                         title="(ENLAZO PAGINA)2DA PARTE DE COMO SUBIR WEB">
+                </iframe> </div>
+            <script src="https://player.vimeo.com/api/player.js"></script>
+            </div>
+    </section>
+    <section id="quienes-somos" class="py-16 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800">Quiénes Somos</h2>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                <div class="md:w-1/2">
+                     <img
+                        src="https://placehold.co/600x400/e2e8f0/334155?text=Imagen+Equipo"
+                        alt="Equipo"
+                        class="rounded-lg shadow-lg mx-auto"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/ffffff?text=Error+Imagen'"
+                     />
+                </div>
+                <div class="md:w-1/2 text-left">
+                    <p class="text-lg mb-4">Somos un ministerio apasionado por equipar a la iglesia y a las familias para discipular a la próxima generación. Creemos que la Biblia es la Palabra de Dios y tiene el poder de transformar vidas.</p>
+                    <p class="text-lg">Ofrecemos materiales didácticos, capacitación y acompañamiento para que la enseñanza bíblica sea efectiva, relevante y divertida para los niños.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="recursos" class="py-16 bg-blue-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12 text-gray-800">Nuestros Recursos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                     <img
+                        src="https://placehold.co/400x300/a5f3fc/0891b2?text=Lecciones+B%C3%ADblicas"
+                        alt="Recurso Lecciones Bíblicas"
+                        class="rounded-md mb-4 w-full h-48 object-cover"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
+                     />
+                    <h3 class="text-xl font-semibold mb-2 text-blue-700">Lecciones Bíblicas</h3>
+                    <p class="text-gray-600 mb-4">Series completas de lecciones para escuela dominical o grupos pequeños.</p>
+                    <a href="#" id="ver-mas-lecciones" data-resource-name="Lecciones Bíblicas" class="text-blue-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                     <img
+                        src="https://placehold.co/400x300/fecaca/991b1b?text=Manualidades"
+                        alt="Recurso Manualidades y Actividades"
+                        class="rounded-md mb-4 w-full h-48 object-cover"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
+                     />
+                    <h3 class="text-xl font-semibold mb-2 text-red-700">Manualidades y Actividades</h3>
+                    <p class="text-gray-600 mb-4">Ideas creativas para reforzar el aprendizaje bíblico de forma práctica.</p>
+                    <a href="#" data-resource-name="Manualidades y Actividades"
+                       class="text-red-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                     <img
+                        src="https://placehold.co/400x300/bbf7d0/15803d?text=Capacitaci%C3%B3n"
+                        alt="Recurso Capacitación para Maestros"
+                        class="rounded-md mb-4 w-full h-48 object-cover"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/ffffff?text=Error+Imagen'"
+                     />
+                    <h3 class="text-xl font-semibold mb-2 text-green-700">Capacitación para Maestros</h3>
+                    <p class="text-gray-600 mb-4">Talleres y cursos para equipar a líderes y voluntarios del ministerio infantil.</p>
+                    <a href="#" data-resource-name="Capacitación para Maestros"
+                       class="text-green-600 hover:underline font-medium resource-view-more-link">Ver más</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonios" class="py-16 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12 text-gray-800">Testimonios</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
+                    <img src="https://placehold.co/150x200/e0e0e0/999999?text=Persona+Feliz+1" alt="Testimonio de Cliente Satisfecho 1" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Ana G. - Maestra Escuela Dominical</h3>
+                    <p class="text-sm text-gray-600 text-center">"Los materiales son increíblemente creativos y fáciles de usar. ¡Mis niños los aman!"</p>
+                </div>
+                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
+                    <img src="https://placehold.co/150x200/d0d0d0/999999?text=Persona+Feliz+2" alt="Testimonio de Cliente Satisfecho 2" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Carlos P. - Padre de Familia</h3>
+                    <p class="text-sm text-gray-600 text-center">"Finalmente encontré recursos que me ayudan a enseñar la Biblia a mis hijos de forma divertida y significativa."</p>
+                </div>
+                 <div class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
+                    <img src="https://placehold.co/150x200/c0c0c0/999999?text=Persona+Feliz+3" alt="Testimonio de Cliente Satisfecho 3" class="mx-auto mb-4 rounded w-32 h-40 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/cccccc/ffffff?text=Error'" />
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Laura M. - Líder Ministerio Infantil</h3>
+                    <p class="text-sm text-gray-600 text-center">"La capacitación para maestros transformó nuestro ministerio. ¡Totalmente recomendado!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nueva-seccion" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+             <div class="grid grid-cols-1 gap-8 max-w-lg mx-auto">
+                 <div class="text-center mb-8">
+                     <button id="open-modal-button-nueva-seccion"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg text-lg transition duration-300 inline-block">
+                         ¡QUIERO ACCESO AHORA!
+                     </button>
+                 </div>
+                 <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-6">
+                     <p class="text-gray-500 text-xl font-semibold">Contenido Adicional 1</p>
+                 </div>
+                 <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-6">
+                     <p class="text-gray-500 text-xl font-semibold">Contenido Adicional 2</p>
+                 </div>
+             </div>
+        </div>
+    </section>
+
+    <section id="garantia" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-1">
+                    <img src="https://i.imgur.com/XmelnjE.png" alt="Sello de Garantía 100% Satisfacción por 7 Días" class="mx-auto w-48 h-auto md:w-full max-w-[250px]" onerror="this.onerror=null; this.src='https://placehold.co/200/cccccc/ffffff?text=Sello+Garantia'" />
+                </div>
+                <div class="md:col-span-2 text-center md:text-left">
+                    <h3 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">Tu Inversión 100% Segura: Garantía de 7 Días</h3>
+                    <p class="text-lg text-gray-600 mb-4">Es muy sencillo y fácil...</p>
+                    <p class="text-gray-700 mb-4">Tendrás acceso al material completo, y si en 7 días ves que el contenido no es para ti, o no era lo que esperabas, te devolvemos el 100% de la inversión. Nuestro objetivo es aportar valor real a la educación de nuestros niños.</p>
+                    <p class="text-gray-800 font-semibold mb-4">Plataforma online 100% segura</p>
+                    <p class="text-gray-700">Podrás acceder a los contenidos para siempre. Acceso de por vida para ti. El material estará disponible las 24 horas del día, para que puedas acceder las veces que quieras y donde prefieras, ya sea en tu móvil, tablet u ordenador.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="acceso" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div>
+                    <img src="https://placehold.co/300x400/e2e8f0/334155?text=Kit+Completo+EBK" alt="Kit Principal Escuela Bíblica Kids" class="mx-auto rounded-lg shadow-md w-auto max-w-xs" onerror="this.onerror=null; this.src='https://placehold.co/300x400/cccccc/ffffff?text=Error+Kit'" />
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wider mb-1">Recapitulemos</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-purple-600 mb-6">TODO A LO QUE TENDRÁS ACCESO:</h2>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-2 mt-1">✔</span>
+                            <span>Kit Completo Escuela Bíblica <span class="font-semibold">(Valor $29.90)</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-2 mt-1">✔</span>
+                            <span>Bonus: Dinámicas Divertidas <span class="font-semibold">(Valor $17.00)</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-2 mt-1">✔</span>
+                            <span>Bonus: Historias Bíblicas Ilustradas <span class="font-semibold">(Valor $9.90)</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-2 mt-1">✔</span>
+                            <span>Bonus: Actividades Lúdicas <span class="font-semibold">(Valor $9.90)</span></span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-purple-600 mr-2 mt-1">✔</span>
+                            <span>Bonus: Guía de Alfabetización <span class="font-semibold">(Valor $14.90)</span></span>
+                        </li>
+                    </ul>
+                    <p class="mt-6 text-gray-600 font-medium">¡Todo esto por separado costaría más de <span class="font-bold">$80 dólares</span>!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="contact-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-modal-button">&times;</span>
+            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Agenda una Llamada</h2>
+            <div class="max-w-md mx-auto">
+                <form action="#" method="POST">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                     <div class="mb-4">
+                        <label for="whatsapp" class="block text-gray-700 text-sm font-bold mb-2">Whatsapp:</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                     <div class="mb-4">
+                        <label for="ecommerce_platform" class="block text-gray-700 text-sm font-bold mb-2">¿Cuál es tu plataforma de ecommerce?:</label>
+                        <input type="text" id="ecommerce_platform" name="ecommerce_platform" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                     <div class="mb-6">
+                        <label for="ecommerce_url" class="block text-gray-700 text-sm font-bold mb-2">¿Cuál es la URL de tu ecommerce?:</label>
+                        <input type="url" id="ecommerce_url" name="ecommerce_url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                            Agendar Llamada
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-4">
+                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white mx-2 text-xl"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="text-gray-400 text-sm">&copy; 2025 Escuela Bíblica Kids (Réplica). Todos los derechos reservados.</p>
+            <p class="text-gray-400 text-sm mt-1">Diseño inspirado en escuelabiblicakids.com</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.link/jywvuc" id="whatsapp-button" class="whatsapp-fab" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // Script para el menú móvil
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                     // Solo ocultar el menú si el enlace no es el de contacto (que ahora abre el modal)
+                     if (link.id !== 'mobile-contacto-link') {
+                         if (!link.href.includes('#') || link.pathname !== window.location.pathname) {
+                            return;
+                         }
+                         if (link.getAttribute('href') === '#' || link.href.endsWith('#')) {
+                            if (!mobileMenu.classList.contains('hidden')) {
+                                 if (link.getAttribute('href') === '#') {
+                                     mobileMenu.classList.add('hidden');
+                                 }
+                            }
+                            return;
+                         }
+                         mobileMenu.classList.add('hidden');
+                     }
+                });
+            });
+        }
+
+        // Scripts para el pop-up del formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('contact-modal');
+            const closeButton = document.getElementById('close-modal-button');
+            const openButtons = document.querySelectorAll('#open-modal-button-hero, #open-modal-button-nueva-seccion'); // Botones que abren el modal
+            const navContactLink = document.getElementById('nav-contacto-link'); // Enlace de contacto en nav principal
+            const mobileContactLink = document.getElementById('mobile-contacto-link'); // Enlace de contacto en menú móvil
+
+            // Función para abrir el modal
+            function openModal() {
+                if (modal) modal.classList.remove('hidden');
+            }
+
+            // Función para cerrar el modal
+            function closeModal() {
+                if (modal) modal.classList.add('hidden');
+            }
+
+            // Event listeners para abrir el modal con los botones "Quiero Acceso Ahora"
+            openButtons.forEach(button => {
+                button.addEventListener('click', openModal);
+            });
+
+            // Event listeners para abrir el modal con los enlaces de "Contacto"
+            if (navContactLink) {
+                navContactLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Previene el comportamiento por defecto del enlace
+                    openModal();
+                });
+            }
+             if (mobileContactLink) {
+                mobileContactLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Previene el comportamiento por defecto del enlace
+                    openModal();
+                     // Oculta el menú móvil al abrir el modal desde él
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+
+            // Event listener para cerrar el modal con el botón de cerrar
+            if (closeButton) {
+                closeButton.addEventListener('click', closeModal);
+            }
+
+            // Event listener para cerrar el modal haciendo clic fuera del contenido del modal
+            if (modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) { // Si el clic fue directamente en el overlay
+                        closeModal();
+                    }
+                });
+            }
+
+
+            // Scripts para enviar eventos al DataLayer (mantengo los existentes y ajusto el del formulario)
+            // Seguimiento del clic en el botón CTA principal de la sección Héroe (ahora abre modal)
+            const ctaHeroButton = document.getElementById('open-modal-button-hero'); // Usamos el nuevo ID del botón
+            if (ctaHeroButton) {
+                ctaHeroButton.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'cta_click', // Nombre genérico del evento
+                        'event_category': 'CTA', // Categoría del evento
+                        'event_action': 'click', // Acción realizada
+                        'event_label': 'Abrir Formulario - Hero', // Etiqueta descriptiva
+                        // No hay link_url ya que abre modal, no navega
+                        'button_text': this.textContent.trim() // Texto del botón
+                    });
+                });
+            }
+
+            // Seguimiento del clic en el botón CTA de la "Nueva Sección" (ahora abre modal)
+            const ctaNuevaSeccionButton = document.getElementById('open-modal-button-nueva-seccion'); // Usamos el nuevo ID del botón
+            if (ctaNuevaSeccionButton) {
+                ctaNuevaSeccionButton.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'cta_click',
+                        'event_category': 'CTA',
+                        'event_action': 'click',
+                        'event_label': 'Abrir Formulario - Nueva Seccion',
+                         // No hay link_url ya que abre modal, no navega
+                        'button_text': this.textContent.trim() // Texto del botón
+                    });
+                });
+            }
+
+            // Seguimiento de clics en los enlaces "Ver más" de los recursos
+            const resourceLinks = document.querySelectorAll('.resource-view-more-link');
+            resourceLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const resourceName = this.getAttribute('data-resource-name') || 'Desconocido';
+                    dataLayer.push({
+                        'event': 'resource_link_click',
+                        'event_category': 'Recursos',
+                        'event_action': 'click_ver_mas',
+                        'event_label': resourceName,
+                        'link_url': this.href,
+                        'link_text': this.textContent.trim()
+                    });
+                });
+            });
+
+            // Seguimiento del clic en el enlace del anuncio nuevo
+            const newAnnouncementLink = document.getElementById('new-announcement-link');
+            if (newAnnouncementLink) {
+                newAnnouncementLink.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'announcement_click',
+                        'event_category': 'Header Announcement',
+                        'event_action': 'click',
+                        'event_label': this.textContent.trim(),
+                        'link_url': this.href
+                    });
+                });
+            }
+
+            // Seguimiento de clics en el botón Donar (Navegación principal)
+            const navDonateLink = document.getElementById('nav-donate-link');
+            if (navDonateLink) {
+                navDonateLink.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'navigation_click',
+                        'event_category': 'Header Navigation',
+                        'event_action': 'click_donate',
+                        'event_label': 'Donar - Nav',
+                        'link_url': this.href
+                    });
+                });
+            }
+
+            // Seguimiento de clics en el botón Donar (Menú móvil)
+            const mobileDonateLink = document.getElementById('mobile-donate-link');
+            if (mobileDonateLink) {
+                mobileDonateLink.addEventListener('click', function() {
+                     dataLayer.push({
+                        'event': 'navigation_click',
+                        'event_category': 'Mobile Navigation',
+                        'event_action': 'click_donate',
+                        'event_label': 'Donar - Mobile',
+                        'link_url': this.href
+                    });
+                });
+            }
+
+             // Seguimiento de clics en el enlace de Contacto (Navegación principal) - Ahora abre modal
+            if (navContactLink) {
+                navContactLink.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'navigation_click',
+                        'event_category': 'Header Navigation',
+                        'event_action': 'click_contact_open_modal', // Cambiado para reflejar que abre modal
+                        'event_label': 'Contacto - Nav',
+                        // No hay link_url ya que abre modal
+                    });
+                });
+            }
+
+            // Seguimiento de clics en el enlace de Contacto (Menú móvil) - Ahora abre modal
+            if (mobileContactLink) {
+                mobileContactLink.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'navigation_click',
+                        'event_category': 'Mobile Navigation',
+                        'event_action': 'click_contact_open_modal', // Cambiado para reflejar que abre modal
+                        'event_label': 'Contacto - Mobile',
+                        // No hay link_url ya que abre modal
+                    });
+                });
+            }
+
+            // Seguimiento del envío del formulario de contacto
+            const contactForm = document.querySelector('#contact-modal form'); // Seleccionamos el formulario dentro del modal
+            if (contactForm) {
+                contactForm.addEventListener('submit', function() {
+                    dataLayer.push({
+                        'event': 'form_submit', // Nombre del evento para envío de formulario
+                        'event_category': 'Contacto', // Categoría del evento
+                        'event_action': 'submit', // Acción: envío
+                        'event_label': 'Formulario Agendar Llamada - PopUp', // Etiqueta descriptiva actualizada
+                        // Puedes añadir más detalles del formulario si es necesario,
+                        // pero ten cuidado con enviar información personal sensible directamente al DataLayer.
+                    });
+                });
+            }
+
+            // Seguimiento del clic en el botón de WhatsApp
+            const whatsappButton = document.getElementById('whatsapp-button');
+            if (whatsappButton) {
+                whatsappButton.addEventListener('click', function() {
+                    dataLayer.push({
+                        'event': 'contact_click',
+                        'event_category': 'Contact',
+                        'event_action': 'whatsapp_click',
+                        'event_label': 'WhatsApp FAB', // FAB: Floating Action Button
+                        'link_url': this.href
+                    });
+                });
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
